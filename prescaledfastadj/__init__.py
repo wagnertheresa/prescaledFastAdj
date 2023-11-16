@@ -100,15 +100,11 @@ class AdjacencyMatrix():
         d = points.shape[1]
         
         if scaling is not None:
-            #self.points_center = points.mean(axis=0)
-            #points = points - self.points_center
+            self.points_center = points.mean(axis=0)
+            points = points - self.points_center
         
-            #radius = np.sqrt((points ** 2).sum(axis=1).max())
+            radius = np.sqrt((points ** 2).sum(axis=1).max())
             allowed_radius = 0.25 - scaling - 0.5*self.setup.eps
-       
-        radius = 0.25
-        if np.sqrt((points ** 2).sum(axis=1).max()) > radius:
-            ValueError("AdjacencyMatrix points do not have the correct radius, they must range within the radius ", radius)
         
         if self.core is None or \
                 d != self.core.d or \
