@@ -17,21 +17,21 @@ library_dirs = [os.path.join(nfft_base, 'julia', 'fastsum')]
 macros = [('MAJOR_VERSION', '0'), ('MINOR_VERSION', '2')]
 
 # C extension fastadj2.core
-core_ext = Extension('fastadj2.core',
+core_ext = Extension('prescaledfastadj.core',
     define_macros = macros,
     include_dirs = include_dirs,
     libraries = ['fastsumjulia'],
 	library_dirs = library_dirs,
     runtime_library_dirs = library_dirs,
-    sources = ['fastadj2/core.c'])
+    sources = ['prescaledfastadj/core.c'])
 
 # run setup
-setup(name = 'fastadj2',
+setup(name = 'prescaledfastadj',
     version = '0.2',
-    description = 'Fast multiplication with Gaussian adjacency matrices using NFFT/Fastsum',
+    description = 'Prescaled FastAdjacency Package',
     author = 'Theresa Wagner',
     author_email = 'theresa.wagner@math.tu-chemnitz.de',
-    url = 'https://github.com/wagnertheresa/FastAdjacency2.0',
-    packages = ['fastadj2'],
+    url = 'https://github.com/wagnertheresa/prescaledFastAdj',
+    packages = ['prescaledfastadj'],
     py_modules = [],
     ext_modules = [core_ext])
