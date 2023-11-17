@@ -1,5 +1,4 @@
-
-import fastadj
+import prescaledfastadj
 import numpy as np
 from time import perf_counter as timer
 
@@ -11,7 +10,7 @@ numev = 11
 
 x = np.random.randn(n, d)
 
-adj = fastadj.AdjacencyMatrix(x, sigma, kernel=1, setup='default')
+adj = prescaledfastadj.AdjacencyMatrix(x, sigma, kernel=1, setup='default')
 
 print("Setup done")
 
