@@ -51,7 +51,7 @@ adj_der = prescaledfastadj.AdjacencyMatrix(x, np.sqrt(2)*sigma, kernel=2, setup=
 
 print("Setup done")
 
-degrees_der = adj_der.apply(np.ones(n))
+degrees_der = (2/sigma)*adj_der.apply(np.ones(n))
 
 print("Avg/min/max degree:", degrees_der.mean(), degrees_der.min(), degrees_der.max())
 
