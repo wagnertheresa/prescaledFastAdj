@@ -1,11 +1,15 @@
-# FastAdjacency
+# prescaledFastAdj
 
 Extended version of the [FastAdjacency](https://github.com/dominikbuenger/FastAdjacency) package of Dominik Bünger.
 
-### Python extension to compute fast approximate multiplication with Gaussian adjacency matrices or with the Hadamard product of the Euclidean distance matrix and the Gaussian adjacency matrix
+### Python extension to compute fast approximate evaluations of the Gaussian kernel, its derivative kernel and the Matérn(1/2) kernel for our paper "Fast Evaluation of Additive Kernels: Feature Arrangement, Fourier Methods and Kernel Derivatives".
+
+Different to the original [FastAdjacency](https://github.com/dominikbuenger/FastAdjacency), this package enables to evaluate the Gaussian derivative kernel matrix and the Matérn(1/2) kernel. Moreover, the data is prescaled before for a transparent and comparable global sensitivity analysis.
+
+In this package the data scaling happens outside of the package for 
 
 This package provides a Python interface to a part of the [NFFT3](https://github.com/NFFT/nfft) library to quickly approximate adjacency matrices of fully connected graphs with Gaussian edge weights.
-See [test/showcase.ipynb](test/showcase.ipynb) for an overview over the method.
+See [test/showcase.ipynb](test/showcase.ipynb) for an overview of the method.
 
 # Installation
 
@@ -18,7 +22,7 @@ See [test/showcase.ipynb](test/showcase.ipynb) for an overview over the method.
 
 * Call `echo $LD_LIBRARY_PATH` to make sure that it contains `/usr/local/lib`, where the shared libraries of FFTW and NFFT are installed. If not, add the line `export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib` to your `~/.bashrc` file and run `source ~/.bashrc`.
 
-* Navigate to the FastAdjacency folder.
+* Navigate to the prescaledFastAdj folder.
 
 * Export the path to your NFFT3 installation folder as the `NFFT_BASE` environment variable via `export NFFT_BASE=/path/to/your/NFFT/base/directory`. 
 
