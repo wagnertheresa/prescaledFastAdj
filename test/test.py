@@ -10,33 +10,101 @@ numev = 11
 
 x = np.random.randn(n, d)
 
-adj = prescaledfastadj.AdjacencyMatrix(x, sigma, kernel=1, setup='default')
+#################################################################################
+
+print("\nTest Gaussian kernel!")
+
+adj_gauss = prescaledfastadj.AdjacencyMatrix(x, np.sqrt(2)*sigma, kernel=1, setup='default', diagonal=1.0)
 
 print("Setup done")
 
-degrees = adj.apply(np.ones(n))
+degrees_gauss = adj_gauss.apply(np.ones(n))
 
-print("Avg/min/max degree:", degrees.mean(), degrees.min(), degrees.max())
+print("Avg/min/max degree:", degrees_gauss.mean(), degrees_gauss.min(), degrees_gauss.max())
+
+tic = timer()
+
+nrm_gauss = adj_gauss.normalized_laplacian_norm()
+
+time_nrm_gauss = timer() - tic
+print("Normalized Laplacian norm_gauss: {}   (computed in {} seconds)".format(nrm_gauss, time_nrm_gauss))
 
 
 tic = timer()
 
-nrm = adj.normalized_laplacian_norm()
+w_gauss, U_gauss = adj_gauss.normalized_eigs(numev)
 
-time_nrm = timer() - tic
-print("Normalized Laplacian norm: {}   (computed in {} seconds)".format(nrm, time_nrm))
+time_eigs_gauss = timer() - tic
+print("Time for eigenvalue computation: {} seconds".format(time_eigs_gauss))
+
+d_invsqrt_gauss = 1 / np.sqrt(adj_gauss.apply(np.ones(n)))
+
+for i in range(w_gauss.size):
+	res_gauss = np.linalg.norm(d_invsqrt_gauss * adj_gauss.apply(d_invsqrt_gauss * U_gauss[:,i]) - U_gauss[:,i] * w_gauss[i])
+	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w_gauss[i], res_gauss))
+
+#################################################################################
+
+print("\nTest Gaussian derivative kernel!")
+
+adj_der = prescaledfastadj.AdjacencyMatrix(x, np.sqrt(2)*sigma, kernel=2, setup='default', diagonal=0.0)
+
+print("Setup done")
+
+degrees_der = adj_der.apply(np.ones(n))
+
+print("Avg/min/max degree:", degrees_der.mean(), degrees_der.min(), degrees_der.max())
+
+tic = timer()
+
+nrm_der = adj_der.normalized_laplacian_norm()
+
+time_nrm_der = timer() - tic
+print("Normalized Laplacian norm_gauss: {}   (computed in {} seconds)".format(nrm_der, time_nrm_der))
 
 
 tic = timer()
 
-w, U = adj.normalized_eigs(numev)
+w_der, U_der = adj_der.normalized_eigs(numev)
 
-time_eigs = timer() - tic
-print("Time for eigenvalue computation: {} seconds".format(time_eigs))
+time_eigs_der = timer() - tic
+print("Time for eigenvalue computation: {} seconds".format(time_eigs_der))
 
-d_invsqrt = 1 / np.sqrt(adj.apply(np.ones(n)))
+d_invsqrt_der = 1 / np.sqrt(adj_der.apply(np.ones(n)))
 
-for i in range(w.size):
-	res = np.linalg.norm(d_invsqrt * adj.apply(d_invsqrt * U[:,i]) - U[:,i] * w[i])
-	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w[i], res))
+for i in range(w_der.size):
+	res_der = np.linalg.norm(d_invsqrt_der * adj_der.apply(d_invsqrt_der * U_der[:,i]) - U_der[:,i] * w_der[i])
+	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w_der[i], res_der))
 
+#################################################################################
+
+print("\nTest Matérn kernel!")
+
+adj_matern = prescaledfastadj.AdjacencyMatrix(x, sigma, kernel=3, setup='default', diagonal=1.0)
+
+print("Setup done")
+
+degrees_matern = adj_matern.apply(np.ones(n))
+
+print("Avg/min/max degree:", degrees_matern.mean(), degrees_matern.min(), degrees_matern.max())
+
+tic = timer()
+
+nrm_matern = adj_matern.normalized_laplacian_norm()
+
+time_nrm_matern = timer() - tic
+print("Normalized Laplacian norm_gauss: {}   (computed in {} seconds)".format(nrm_matern, time_nrm_matern))
+
+
+tic = timer()
+
+w_matern, U_matern = adj_matern.normalized_eigs(numev)
+
+time_eigs_matern = timer() - tic
+print("Time for eigenvalue computation: {} seconds".format(time_eigs_matern))
+
+d_invsqrt_matern = 1 / np.sqrt(adj_matern.apply(np.ones(n)))
+
+for i in range(w_matern.size):
+	res_matern = np.linalg.norm(d_invsqrt_matern * adj_matern.apply(d_invsqrt_matern * U_matern[:,i]) - U_matern[:,i] * w_matern[i])
+	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w_matern[i], res_matern))
