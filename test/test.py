@@ -10,11 +10,32 @@ numev = 11
 
 x = np.random.randn(n, d)
 
+##################################################################################
+# scale data points equally
+points_center = np.mean(x, axis=0)
+points = x - points_center
+
+# scale features such that abs(x[:,j]) <= 0.25
+# scale values in range [-0.25, 0.25]
+for j in range(d):
+    m = np.max(np.abs(points[:,j]))
+    points[:,j] = points[:,j] / m * 0.25
+# determine sigma value in this setting
+sigma = 1.0
+# determine maximum number of features in window/kernel
+dmax = 3
+# compute maximum radius possible in dmax dimensions
+scaling = np.sqrt(dmax)
+# ensure max radius 0.25 for points
+points = points / scaling
+# scale sigma accordingly
+scaledsigma = sigma / scaling
+
 #################################################################################
 
 print("\nTest Gaussian kernel!")
 
-adj_gauss = prescaledfastadj.AdjacencyMatrix(x, np.sqrt(2)*sigma, kernel=1, setup='default', diagonal=1.0)
+adj_gauss = prescaledfastadj.AdjacencyMatrix(points, np.sqrt(2)*scaledsigma, kernel=1, setup='default', diagonal=1.0)
 
 print("Setup done")
 
@@ -47,7 +68,7 @@ for i in range(w_gauss.size):
 
 print("\nTest Gaussian derivative kernel!")
 
-adj_der = prescaledfastadj.AdjacencyMatrix(x, np.sqrt(2)*sigma, kernel=2, setup='default', diagonal=0.0)
+adj_der = prescaledfastadj.AdjacencyMatrix(points, np.sqrt(2)*scaledsigma, kernel=2, setup='default', diagonal=0.0)
 
 print("Setup done")
 
@@ -78,9 +99,9 @@ for i in range(w_der.size):
 
 #################################################################################
 
-print("\nTest Matérn kernel!")
+print("\nTest Matérn(1/2) kernel!")
 
-adj_matern = prescaledfastadj.AdjacencyMatrix(x, sigma, kernel=3, setup='default', diagonal=1.0)
+adj_matern = prescaledfastadj.AdjacencyMatrix(points, scaledsigma, kernel=3, setup='default', diagonal=1.0)
 
 print("Setup done")
 
