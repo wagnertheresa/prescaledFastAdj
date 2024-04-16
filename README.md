@@ -2,9 +2,9 @@
 
 Extended version of the [FastAdjacency](https://github.com/dominikbuenger/FastAdjacency) package of Dominik Bünger.
 
-### Python extension to compute fast approximate evaluations of the Gaussian kernel, its derivative kernel and the Matérn(1/2) kernel for our paper "Fast Evaluation of Additive Kernels: Feature Arrangement, Fourier Methods and Kernel Derivatives".
+### Python extension to compute fast approximate evaluations of the Gaussian kernel, the Matérn(1/2) kernel and their derivative kernels for our paper "Fast Evaluation of Additive Kernels: Feature Arrangement, Fourier Methods and Kernel Derivatives".
 
-Different to the original [FastAdjacency](https://github.com/dominikbuenger/FastAdjacency), this package additionally enables to evaluate the Gaussian derivative kernel matrix and the Matérn(1/2) kernel. Moreover, the data is prescaled with scaling parameters based on the scaled data and is scaled equally in all dimensions for a transparent and comparable global sensitivity analysis.
+Different to the original [FastAdjacency](https://github.com/dominikbuenger/FastAdjacency), this package additionally enables to evaluate the Gaussian derivative kernel matrix, the Matérn(1/2) kernel and its derivative kernel. Moreover, the data is prescaled with scaling parameters based on the scaled data and is scaled equally in all dimensions for a transparent and comparable global sensitivity analysis.
 
 This package provides a Python interface to a part of the [NFFT3](https://github.com/NFFT/nfft) library to quickly approximate adjacency matrices of fully connected graphs with Gaussian edge weights.
 See [test/showcase.ipynb](test/showcase.ipynb) for an overview of the method.

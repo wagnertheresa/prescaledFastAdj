@@ -119,6 +119,10 @@ AdjacencyCore_init(AdjacencyCoreObject *self, PyObject *args, PyObject *kwds)
         fastsum_init_guru_kernel(self->fastsum, self->d, laplacian_rbf, &(self->sigma), 
         STORE_PERMUTATION_X_ALPHA, self->N, self->p, 0.0, self->eps);
     }
+    else if (self->kernel == 4) { // der_laplacian_rbf kernel
+        fastsum_init_guru_kernel(self->fastsum, self->d, der_laplacian_rbf, &(self->sigma), 
+        STORE_PERMUTATION_X_ALPHA, self->N, self->p, 0.0, self->eps);
+    }
     else {
         fastsum_init_guru_kernel(self->fastsum, self->d, gaussian, &(self->sigma), 
         STORE_PERMUTATION_X_ALPHA, self->N, self->p, 0.0, self->eps);
@@ -290,6 +294,11 @@ AdjacencyCore_apply(AdjacencyCoreObject* self, PyObject* args, PyObject *keywds)
             data[i] = CREAL(self->fastsum->f[i]) + (self->diagonal - 1.0)*CREAL(self->fastsum->alpha[i]);
         }
     }
+    else if (self->kernel == 4) { // der_laplacian_rbf kernel
+        for (i=0; i<n; ++i) {
+            data[i] = CREAL(self->fastsum->f[i]) + (self->diagonal)*CREAL(self->fastsum->alpha[i]);
+        }
+    }
     else {
         for (i=0; i<n; ++i) {
         data[i] = CREAL(self->fastsum->f[i]) + (self->diagonal - 1.0)*CREAL(self->fastsum->alpha[i]);
@@ -368,6 +377,11 @@ AdjacencyCore_normalized_eigs(AdjacencyCoreObject* self, PyObject* args, PyObjec
             d_invsqrt[i] = 1.0 / sqrt(CREAL(self->fastsum->f[i]) + self->diagonal - 1.0);
         }
     }
+    else if (self->kernel == 4) { // der_laplacian_rbf kernel
+        for (i=0; i<n; ++i) {
+            d_invsqrt[i] = 1.0 / sqrt(CREAL(self->fastsum->f[i]) + self->diagonal);
+        }
+    }
     else {
         for (i=0; i<n; ++i) {
             d_invsqrt[i] = 1.0 / sqrt(CREAL(self->fastsum->f[i]) + self->diagonal - 1.0);
@@ -425,6 +439,12 @@ AdjacencyCore_normalized_eigs(AdjacencyCoreObject* self, PyObject* args, PyObjec
                 for (i=0; i<n; ++i) {
                     workd[ipntr[1] + i] = workd[ipntr[0] + i] + d_invsqrt[i] * 
                                     (CREAL(self->fastsum->f[i]) + (self->diagonal - 1.0)*CREAL(self->fastsum->alpha[i]));
+                }
+            }
+            else if (self->kernel == 4) { // der_laplacian_rbf kernel
+                for (i=0; i<n; ++i) {
+                    workd[ipntr[1] + i] = workd[ipntr[0] + i] + d_invsqrt[i] * 
+                                    (CREAL(self->fastsum->f[i]) + (self->diagonal)*CREAL(self->fastsum->alpha[i]));
                 }
             }
             else {

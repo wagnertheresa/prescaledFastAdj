@@ -129,3 +129,36 @@ d_invsqrt_matern = 1 / np.sqrt(adj_matern.apply(np.ones(n)))
 for i in range(w_matern.size):
 	res_matern = np.linalg.norm(d_invsqrt_matern * adj_matern.apply(d_invsqrt_matern * U_matern[:,i]) - U_matern[:,i] * w_matern[i])
 	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w_matern[i], res_matern))
+
+#################################################################################
+
+print("\nTest Matérn(1/2) derivative kernel!")
+
+adj_dermat = prescaledfastadj.AdjacencyMatrix(points, scaledsigma, kernel=4, setup='default', diagonal=0.0)
+
+print("Setup done")
+
+degrees_dermat = adj_dermat.apply(np.ones(n))
+
+print("Avg/min/max degree:", degrees_dermat.mean(), degrees_dermat.min(), degrees_dermat.max())
+
+tic = timer()
+
+nrm_dermat = adj_dermat.normalized_laplacian_norm()
+
+time_nrm_dermat = timer() - tic
+print("Normalized Laplacian norm_gauss: {}   (computed in {} seconds)".format(nrm_dermat, time_nrm_dermat))
+
+
+tic = timer()
+
+w_dermat, U_dermat = adj_dermat.normalized_eigs(numev)
+
+time_eigs_dermat = timer() - tic
+print("Time for eigenvalue computation: {} seconds".format(time_eigs_dermat))
+
+d_invsqrt_dermat = 1 / np.sqrt(adj_dermat.apply(np.ones(n)))
+
+for i in range(w_dermat.size):
+	res_dermat = np.linalg.norm(d_invsqrt_dermat * adj_dermat.apply(d_invsqrt_dermat * U_dermat[:,i]) - U_dermat[:,i] * w_dermat[i])
+	print("Eigenvalue #{}: {:.4f} - Residual: {:.4e}".format(i, w_dermat[i], res_dermat))
