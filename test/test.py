@@ -5,7 +5,7 @@ from time import perf_counter as timer
 
 n = 10000
 d = 3
-sigma = 1.0
+sigma = 1.0 # note that this sigma is already chosen to be applied to nodes scaled to [-1/4,1/4]^d
 numev = 11
 
 x = np.random.randn(n, d)
